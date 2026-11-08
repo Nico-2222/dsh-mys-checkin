@@ -1,0 +1,18 @@
+# dsh-mys-checkin bundle patch.
+#
+# Inserts one plugin row. The row id lets the profile's own cordis.patch.yml
+# (or a --patch overlay) override this plugin's configuration.
+#
+#   - id: mys-checkin
+#     name: "dsh-mys-checkin"
+#     config:
+#       games: [genshin, starrail, zzz]
+#       signTime: "00:30"
+#
+# No account credential ever belongs in this file. Run the QR login once from
+# the plugin panel (GET /mys-checkin) and the token is stored, with mode 0600,
+# under $DSH_HOME/data/mys-checkin/state.json.
+
+- insert:
+    - id: mys-checkin
+      name: 'dsh-mys-checkin'

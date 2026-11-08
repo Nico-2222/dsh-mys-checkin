@@ -1,0 +1,52 @@
+{
+  "name": "dsh-mys-checkin",
+  "version": "0.1.0",
+  "description": "MiYoushe (米游社) full-game daily check-in for DeepSeek Harness: 原神 / 崩坏：星穹铁道 / 绝区零 / 崩坏3 / 未定事件簿 / 崩坏学园2, with QR login, per-game selection, daily schedule and agent tools.",
+  "license": "MIT",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "README.zh.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "cordis",
+    "plugin",
+    "miyoushe",
+    "米游社",
+    "genshin",
+    "原神",
+    "checkin",
+    "签到",
+    "honkai",
+    "starrail",
+    "zzz"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "^3.18.1",
+    "qrcode": "^1.5.4"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/cordis-plugin-timer": "^1.1.3",
+    "@deepseek-ai/dsh-tools": ">=0.1.0-rc.6"
+  },
+  "engines": {
+    "node": ">=22.19"
+  }
+}
