@@ -331,6 +331,18 @@ function renderReport(report) {
   box.innerHTML = rows.length ? rows.join('') : '<span class="muted">没有可签到的角色。</span>';
 }
 
+function fmtTime(iso) {
+  if (!iso) return '—';
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return String(iso).slice(0, 16);
+  const parts = new Intl.DateTimeFormat('zh-CN', {
+    timeZone: 'Asia/Shanghai', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hour12: false,
+  }).formatToParts(date);
+  const get = (type) => (parts.find((part) => part.type === type) || {}).value || '';
+  return get('month') + '-' + get('day') + ' ' + get('hour') + ':' + get('minute');
+}
+
 function renderHistory(state) {
   const list = $('history');
   const entries = state.history || [];
@@ -339,7 +351,7 @@ function renderHistory(state) {
     const roles = (entry.games || []).flatMap((game) => game.roles || []);
     const signed = roles.filter((role) => role.status === 'signed').length;
     const failed = roles.filter((role) => role.status === 'failed').length;
-    const when = String(entry.at || '').replace('T', ' ').slice(0, 16);
+    const when = fmtTime(entry.at);
     const reason = entry.reason === 'schedule' ? '定时' : entry.reason === 'catch-up' ? '补签' : '手动';
     return '<li><span class="muted">' + when + '</span><span>' + reason + '</span><span class="tag ' + (failed ? 'failed' : 'signed') + '">新签 ' + signed + ' / 失败 ' + failed + '</span></li>';
   }).join('');
