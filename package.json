@@ -1,7 +1,7 @@
 {
   "name": "dsh-mys-checkin",
   "version": "0.1.0",
-  "description": "MiYoushe (米游社) full-game daily check-in for DeepSeek Harness: 原神 / 崩坏：星穹铁道 / 绝区零 / 崩坏3 / 未定事件簿 / 崩坏学园2, with QR login, per-game selection, daily schedule and agent tools.",
+  "description": "MiYoushe (米游社) full-game daily check-in for DeepSeek Harness: 原神 / 崩坏：星穹铁道 / 绝区零 / 崩坏3 / 未定事件簿 / 崩坏学园2, with QR login, per-game selection, daily schedule and agent tools. Mainland China (国服, cn_gf01/cn_qd01) servers only.",
   "license": "MIT",
   "type": "module",
   "main": "lib/index.js",

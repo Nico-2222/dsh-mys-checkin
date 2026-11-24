@@ -2,6 +2,9 @@
 
 给 [DeepSeek Harness](https://github.com/deepseek-ai/dsh)（dsh）用的 Cordis 插件：每天自动完成**米游社**（miHoYo BBS）里的游戏社区签到。
 
+> **⚠️ 仅限国服账号使用。** 插件请求的都是米游社国服接口（`cn_gf01` / `cn_qd01`），
+> 国际服（HoYoLAB，`os` 服）账号不受支持，调用会返回 `-100` / `-500001`。
+
 支持国服六个游戏，**安装后在面板里自己勾选要签哪几个**：
 
 | 游戏 | id | act_id |

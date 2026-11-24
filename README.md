@@ -4,6 +4,10 @@ A [DeepSeek Harness](https://github.com/deepseek-ai/dsh) (dsh) Cordis bundle tha
 **miHoYo BBS (米游社) game check-in** for every role bound to your account — 原神, 崩坏：星穹铁道,
 绝区零, 崩坏3, 未定事件簿, 崩坏学园2 — with per-game selection, a daily schedule, and agent tools.
 
+> **Mainland China (国服) accounts only.** Every request targets the 米游社 CN endpoints
+> (`cn_gf01` / `cn_qd01`, e.g. `act_id e202311201442471`). HoYoLAB / international (`os`)
+> accounts are not supported; their requests fail with `-100` / `-500001`.
+
 ## Features
 
 - **QR login** — scan once with the 米游社 App; the plugin exchanges the ticket for long-lived
