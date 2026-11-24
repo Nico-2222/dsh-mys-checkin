@@ -217,7 +217,9 @@
       <label>随机延迟 <input type="number" id="jitter" min="0" max="120" step="1" value="10" style="width:74px" /> 分钟</label>
       <label class="game" style="padding:6px 12px"><input type="checkbox" id="autoSign" checked /><span class="name">自动签到</span></label>
       <label class="game" style="padding:6px 12px"><input type="checkbox" id="catchUp" checked /><span class="name">启动补签</span></label>
+      <label class="game" style="padding:6px 12px"><input type="checkbox" id="bbsSign" checked /><span class="name">米游币签到</span></label>
     </div>
+    <p class="muted" style="margin:10px 0 0;font-size:12px">米游币只做「讨论区签到」（原神 / 大别野），<strong>不会评论、点赞或分享</strong>。</p>
     <div class="row" style="margin-top:16px">
       <button id="save">保存设置</button>
       <button id="run" class="ghost">立即签到</button>
@@ -310,6 +312,7 @@ function renderSettings(state) {
   $('jitter').value = state.settings.jitterMinutes;
   $('autoSign').checked = state.settings.autoSign === true;
   $('catchUp').checked = state.settings.catchUp === true;
+  $('bbsSign').checked = state.settings.bbsSign !== false;
 }
 
 function tag(status) {
@@ -327,6 +330,13 @@ function renderReport(report) {
       const extra = role.award ? '奖励「' + role.award + '」' : (role.totalDays != null ? '累计 ' + role.totalDays + ' 天' : '');
       rows.push('<div class="line"><b>' + game.name + '</b><span class="muted">' + role.regionName + ' · ' + (role.nickname || role.uid) + '</span>' + tag(role.status) + '<span class="muted">' + extra + (role.status === 'failed' ? (role.message || '') : '') + '</span></div>');
     }
+  }
+  const bbs = report.bbs;
+  if (bbs) {
+    const label = bbs.skipped
+      ? '今日已完成，已得 ' + (bbs.before?.already ?? 0)
+      : (bbs.ok ? '签到完成' : '有失败') + (bbs.after ? '，余额 ' + bbs.before?.total + ' → ' + bbs.after.total : '');
+    rows.push('<div class="line"><b>米游币</b><span class="tag ' + (bbs.ok ? 'signed' : 'failed') + '">' + label + '</span><span class="muted">仅讨论区签到</span></div>');
   }
   box.innerHTML = rows.length ? rows.join('') : '<span class="muted">没有可签到的角色。</span>';
 }
@@ -419,6 +429,7 @@ $('save').addEventListener('click', async () => {
       jitterMinutes: Number($('jitter').value),
       autoSign: $('autoSign').checked,
       catchUp: $('catchUp').checked,
+      bbsSign: $('bbsSign').checked,
     }) });
     $('saveNote').textContent = '已保存';
     setTimeout(() => { $('saveNote').textContent = ''; }, 2000);

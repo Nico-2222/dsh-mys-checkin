@@ -78,17 +78,6 @@ the profile's `cordis.patch.yml`:
 | `-500001` | missing `x-rpc-signgame` or stale DS salt | check `signgame` and client constants |
 | `10001` | parameter error (stale act_id) | update `act_id` in `lib/games.js` |
 
-## UI assets
-
-The miyoushe wordmark and the six official community avatars under `lib/assets/` are fetched from
-miHoYo's public community CDN (`bbs-static.miyoushe.com`, `fastcdn.mihoyo.com`,
-`www.miyoushe.com/assets`) purely so the panel is recognisable. All trademarks and artwork remain
-miHoYo's property; this project claims no rights and represents no affiliation. Remove the images at
-any time — the panel degrades to text-only labels.
-
-Panel markup lives in `lib/panel.html` and is re-read on every request, so restyling is a file save
-(no plugin reload needed after the first restart).
-
 ## Limitations
 
 - Mainland China servers only; HoYoLAB (global) uses different endpoints and salts.
