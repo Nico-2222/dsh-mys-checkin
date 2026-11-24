@@ -9,6 +9,8 @@ A [DeepSeek Harness](https://github.com/deepseek-ai/dsh) (dsh) Cordis bundle tha
 - **QR login** — scan once with the 米游社 App; the plugin exchanges the ticket for long-lived
   credentials itself. No browser cookie jar, no password.
 - **Pick your games** — enable only the games you play; every bound role (across regions) is signed.
+- **米游币 check-in** — optionally the 原神 / 大别野 community sign-in in the same run (+30 米游币 a day).
+  Sign-in only: the plugin never comments, likes, shares or posts.
 - **Daily schedule** — default 00:30 Asia/Shanghai plus a random 0–10 min jitter; a startup catch-up
   covers a machine that was off at the scheduled time (sign-in is idempotent: `-5003` means already signed).
 - **Agent tools** — `mys_checkin_status`, `mys_checkin_now`, `mys_checkin_games`,
@@ -77,17 +79,6 @@ the profile's `cordis.patch.yml`:
 | `-100` / `-1001` | credential expired | refresh cookie_token from stoken once, then ask to re-scan |
 | `-500001` | missing `x-rpc-signgame` or stale DS salt | check `signgame` and client constants |
 | `10001` | parameter error (stale act_id) | update `act_id` in `lib/games.js` |
-
-## UI assets
-
-The miyoushe wordmark and the six official community avatars under `lib/assets/` are fetched from
-miHoYo's public community CDN (`bbs-static.miyoushe.com`, `fastcdn.mihoyo.com`,
-`www.miyoushe.com/assets`) purely so the panel is recognisable. All trademarks and artwork remain
-miHoYo's property; this project claims no rights and represents no affiliation. Remove the images at
-any time — the panel degrades to text-only labels.
-
-Panel markup lives in `lib/panel.html` and is re-read on every request, so restyling is a file save
-(no plugin reload needed after the first restart).
 
 ## Limitations
 
