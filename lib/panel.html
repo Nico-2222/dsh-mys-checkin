@@ -201,6 +201,16 @@
           <button id="logout" class="ghost">退出登录</button>
         </div>
         <div class="hint" style="margin-top:10px">二维码 3 分钟内有效；凭证过期后重新扫一次即可。</div>
+        <details style="margin-top:14px">
+          <summary style="cursor:pointer;font-size:13px" id="pasteSummary">扫不了二维码？手动粘贴 cookie</summary>
+          <div class="hint" style="margin:8px 0 10px">在电脑浏览器登录 <b>user.mihoyo.com</b> → F12 → Application → Cookies → 复制 <code>cookie_token</code> 和 <code>ltoken</code> 的值粘到下面。适用于 QQ / 手机无法扫码的场景。</div>
+          <input id="pasteCookieToken" placeholder="cookie_token（v2_ 开头）" spellcheck="false" />
+          <input id="pasteLtoken" placeholder="ltoken（v2_ 开头，可留空）" spellcheck="false" style="margin-top:8px" />
+          <div class="row" style="margin-top:10px">
+            <button id="pasteSave">保存凭证</button>
+          </div>
+          <div class="hint" id="pasteNote" style="margin-top:8px"></div>
+        </details>
       </div>
     </div>
   </section>
@@ -334,7 +344,7 @@ function renderReport(report) {
   const bbs = report.bbs;
   if (bbs) {
     const label = bbs.skipped
-      ? '今日已完成，已得 ' + (bbs.before?.already ?? 0)
+      ? (bbs.before ? '今日已完成，已得 ' + (bbs.before?.already ?? 0) : '已跳过（' + (bbs.reason ?? '需要扫码登录') + '）')
       : (bbs.ok ? '签到完成' : '有失败') + (bbs.after ? '，余额 ' + bbs.before?.total + ' → ' + bbs.after.total : '');
     rows.push('<div class="line"><b>米游币</b><span class="tag ' + (bbs.ok ? 'signed' : 'failed') + '">' + label + '</span><span class="muted">仅讨论区签到</span></div>');
   }
@@ -387,6 +397,29 @@ $('qrStart').addEventListener('click', async () => {
     startPolling(body.ticket);
   } catch (error) {
     status.textContent = '获取二维码失败：' + error.message;
+  }
+});
+
+$('pasteSave').addEventListener('click', async () => {
+  const note = $('pasteNote');
+  const cookieToken = $('pasteCookieToken').value.trim();
+  const ltoken = $('pasteLtoken').value.trim();
+  if (!cookieToken) {
+    note.textContent = '请先粘贴 cookie_token。';
+    return;
+  }
+  note.textContent = '正在校验…';
+  try {
+    const body = await api('account/paste', {
+      method: 'POST',
+      body: JSON.stringify({ cookieToken, ltoken }),
+    });
+    $('pasteCookieToken').value = '';
+    $('pasteLtoken').value = '';
+    note.textContent = '已绑定，可以签到了。';
+    renderState(body.state);
+  } catch (error) {
+    note.textContent = '绑定失败：' + error.message;
   }
 });
 

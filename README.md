@@ -4,19 +4,19 @@ A [DeepSeek Harness](https://github.com/deepseek-ai/dsh) (dsh) Cordis bundle tha
 **miHoYo BBS (米游社) game check-in** for every role bound to your account — 原神, 崩坏：星穹铁道,
 绝区零, 崩坏3, 未定事件簿, 崩坏学园2 — with per-game selection, a daily schedule, and agent tools.
 
-> **Mainland China (国服) accounts only.** Every request targets the 米游社 CN endpoints
-> (`cn_gf01` / `cn_qd01`, e.g. `act_id e202311201442471`). HoYoLAB / international (`os`)
-> accounts are not supported; their requests fail with `-100` / `-500001`.
-
 ## Features
 
 - **QR login** — scan once with the 米游社 App; the plugin exchanges the ticket for long-lived
   credentials itself. No browser cookie jar, no password.
+- **Sidebar entry** — after install a 米游社 icon appears in the dsh sidebar; the panel needs the dsh
+  session (plain `node`/`curl` gets 401).
 - **Pick your games** — enable only the games you play; every bound role (across regions) is signed.
-- **米游币 check-in** — optionally the 原神 / 大别野 community sign-in in the same run (+30 米游币 a day).
-  Sign-in only: the plugin never comments, likes, shares or posts.
+- **米游币 community check-in** — on by default: after the games, the 原神 and 大别野 forums are signed
+  (+30 米游币/day). Sign-in only — the plugin never comments, likes, shares or posts.
 - **Daily schedule** — default 00:30 Asia/Shanghai plus a random 0–10 min jitter; a startup catch-up
   covers a machine that was off at the scheduled time (sign-in is idempotent: `-5003` means already signed).
+- **Credential health** — bind time is tracked; `mys_checkin_status` warns once the credential is
+  ~27 days old (tokens last about 30 days).
 - **Agent tools** — `mys_checkin_status`, `mys_checkin_now`, `mys_checkin_games`,
   `mys_checkin_schedule`.
 - **Audit trail** — per-role result, cumulative day count and the day's reward name, last 14 runs.
@@ -80,7 +80,7 @@ the profile's `cordis.patch.yml`:
 | --- | --- | --- |
 | `0` | signed | records reward + cumulative days |
 | `-5003` | already signed today | treated as success |
-| `-100` / `-1001` | credential expired | refresh cookie_token from stoken once, then ask to re-scan |
+| `-100` / `-1001` / `-464` / `-3235` | credential expired or account risk check | mapped to "credential expired, re-bind"; `-464` also fires when a token exchange is sent with `mid` instead of the numeric `uid` |
 | `-500001` | missing `x-rpc-signgame` or stale DS salt | check `signgame` and client constants |
 | `10001` | parameter error (stale act_id) | update `act_id` in `lib/games.js` |
 
@@ -88,7 +88,14 @@ the profile's `cordis.patch.yml`:
 
 - Mainland China servers only; HoYoLAB (global) uses different endpoints and salts.
 - After a miHoYo client update, `BBS_VERSION` / `WEB_SALT` may need bumping (symptom: `-500001`).
-- Game check-in only — no 米游币 community tasks, cloud-game sign-in, or mall exchange.
+- 米游币 check-in needs a `stoken` (from QR binding). An account bound only with `cookie_token` /
+  `ltoken` (manual paste) can sign games but the 米游币 step is skipped with an explanatory note.
+- No automated login: both password and SMS login are gated by miHoYo's aigis challenge; only QR
+  binding and manual cookie paste are supported, and no password is ever stored.
+- The panel route requires the dsh session; open it from the sidebar (a bare `fetch` returns 401).
+- Credentials last roughly 30 days; re-binding is required after they expire, and switching devices,
+  a risk check or a password change revokes them early. See [CHANGELOG.md](CHANGELOG.md) and
+  [docs/troubleshooting.zh.md](docs/troubleshooting.zh.md).
 - Scheduling depends on the dsh process being alive; the startup catch-up covers the rest.
 
 ## Disclaimer
